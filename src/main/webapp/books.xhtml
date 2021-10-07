@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    
+    <ui:composition template="/templates/mainLayout.xhtml">
+        <ui:define name="title">
+            #{msgs.BooksTitle}
+        </ui:define>
+
+        <ui:define name="content">
+
+            <div>
+                <h:form id="form" enctype="multipart/form-data">
+
+                    <p:toolbar rendered="#{authenticationBean.hasLibrarianPrivileges()}">
+                        <p:toolbarGroup>
+                            <p:linkButton value="#{msgs.NewBook}" icon="pi pi-plus-circle" outcome="/librarian/createBook.xhtml"/>
+                        </p:toolbarGroup>
+                    </p:toolbar>    
+
+                    <p:dataTable var="book" widgetVar="dtbooks" value="#{bookView.lazyModel}" paginator="true" rows="10"
+                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 paginatorPosition="bottom"
+                                 rowsPerPageTemplate="10,20,50"
+                                 id="bookTable"
+                                 stripedRows="true"
+                                 reflow="true"
+                                 lazy="true"
+                                 selectionMode="single"
+                                 selection="#{bookView.selectedBook}" rowKey="#{book.id}">
+                        <p:ajax event="rowSelect" update="form:view-book-content" oncomplete="PF('viewBookDialog').show()"/>
+                        <f:facet name="header">
+                            <div style="text-align: center">
+                                <h2>#{msgs.BooksHeader}</h2>
+                            </div>
+                        </f:facet>
+
+                        <p:column field="id" headerText="#{msgs.BookID}"/>
+
+                        <p:column field="title" headerText="#{msgs.BookTitle}"/>
+
+                        <p:column field="bookAuthorListToString" headerText="#{msgs.Authors}"/>
+
+                        <p:column field="copies" headerText="#{msgs.Copies}"/>
+
+                        <p:column field="availability.availability" headerText="#{msgs.Availability}">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('dtbooks').filter()" styleClass="custom-filter">
+                                    <f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems value="#{bookView.availabilityValues}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <p:outputLabel value="#{book.availability.label}"/>
+                        </p:column>
+
+                        <p:column rendered="#{authenticationBean.hasLibrarianPrivileges()}">
+                            <p:commandButton icon="pi pi-pencil" update=":form:manage-book-content"
+                                             oncomplete="PF('manageBookDialog').show()"
+                                             styleClass="edit-button rounded-button ui-button-success" process="@this">
+                                <f:setPropertyActionListener value="#{book}" target="#{bookView.selectedBook}"/>
+                                <p:resetInput target=":form:manage-book-content"/>
+                            </p:commandButton>
+                            <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash"
+                                             oncomplete="PF('deleteΒοοκDialog').show()" process="@this"
+                                             rendered="#{authenticationBean.hasAdminPrivileges()}">
+                                <f:setPropertyActionListener value="#{book}" target="#{bookView.selectedBook}"/>
+                            </p:commandButton>
+                        </p:column>
+
+                    </p:dataTable>
+
+                    <p:dialog header="#{msgs.BooksEditDialogTitle}" showEffect="fade" modal="true" 
+                              widgetVar="manageBookDialog" responsive="true" fitViewport="true">
+                        <p:outputPanel id="manage-book-content" class="ui-fluid" style="width: 400px;">
+                            <p:scrollPanel style="height:400px">
+                                <p:graphicImage value="#{bookView.selectedBook.imagepath}" width="130px" height="200px"
+                                                alt="#{msgs.NoPictureAvailable}"/>
+                                <p:panelGrid columns="2" rendered="#{not empty bookView.selectedBook}">
+
+                                    <p:outputLabel for="image" value="#{msgs.ImageLabel}"/>
+                                    <p:fileUpload id="image" value="#{bookView.file}" mode="simple" skinSimple="true"/>
+
+                                    <p:outputLabel for="id" value="#{msgs.IDLabel}"/>
+                                    <p:outputLabel id="id" value="#{bookView.selectedBook.id}"/>
+
+                                    <p:outputLabel for="title" value="#{msgs.TitleLabel}"/>
+                                    <p:inputText id="title" value="#{bookView.selectedBook.title}"
+                                                 required="true"
+                                                 requiredMessage="#{msgs.BookTitleRequired}"/>
+
+                                    <p:outputLabel for="copies" value="#{msgs.CopiesLabel}"/>
+                                    <p:inputNumber id="copies" value="#{bookView.selectedBook.copies}"
+                                                   maxValue="999" decimalPlaces="0"
+                                                   required="true"
+                                                   requiredMessage="#{msgs.BookCopiesRequired}"/>
+
+                                    <p:outputLabel for="authors" value="#{msgs.AuthorsLabel}"/>
+                                    <p:autoComplete id="authors" multiple="true" value="#{bookView.authorNames}" 
+                                                    completeMethod="#{bookManagedBean.completeText}"/>
+
+                                </p:panelGrid>
+                            </p:scrollPanel>
+                        </p:outputPanel>
+
+                        <f:facet name="footer">
+                            <p:commandButton value="#{msgs.Save}" icon="pi pi-check" action="#{bookView.updateBook}"
+                                             onclick="PF('manageBookDialog').hide()"
+                                             update="manage-book-content" process="manage-book-content @this"/>
+                            <p:commandButton value="#{msgs.Cancel}" icon="pi pi-times" onclick="PF('manageBookDialog').hide()"
+                                             class="ui-button-secondary"/>
+                        </f:facet>
+                    </p:dialog>
+
+                    <p:dialog header="#{msgs.BookDetailsDialogHeader}" showEffect="fade" modal="true" 
+                              widgetVar="viewBookDialog" responsive="true" fitViewport="true">
+                        <p:outputPanel id="view-book-content" class="ui-fluid" style="width: 400px;">
+                            <p:graphicImage id="view-image" value="#{bookView.selectedBook.imagepath}" width="130px" height="200px"
+                                            alt="#{msgs.NoPictureAvailable}"/>
+                            <p:panelGrid columns="2">
+                                <p:outputLabel for="view-id" value="#{msgs.IDLabel}"/>
+                                <p:outputLabel id="view-id" value="#{bookView.selectedBook.id}"/>
+
+                                <p:outputLabel for="view-title" value="#{msgs.TitleLabel}"/>
+                                <p:outputLabel id="view-title" value="#{bookView.selectedBook.title}"/>
+
+                                <p:outputLabel for="view-copies" value="#{msgs.CopiesLabel}"/>
+                                <p:outputLabel id="view-copies" value="#{bookView.selectedBook.copies}"/>
+
+                                <p:outputLabel for="view-authors" value="#{msgs.AuthorsLabel}"/>
+                                <p:outputLabel id="view-authors" value="#{bookView.selectedBook.bookAuthorListToString}"/>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:dialog>
+
+                    <p:confirmDialog widgetVar="deleteΒοοκDialog" 
+                                     header="#{msgs.ConfirmationDialogHeader}"
+                                     message="#{msgs.ConfirmationDialogMessage}" 
+                                     showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                        <p:commandButton value="#{msgs.No}" styleClass="ui-confirmdialog-no ui-button-flat" onclick="PF('deleteBookDialog').hide()"/>
+                        <p:commandButton value="#{msgs.Yes}" styleClass="ui-confirmdialog-yes" action="#{bookView.deleteBook}" process="@this"/>
+                    </p:confirmDialog>
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+
+</html>
+

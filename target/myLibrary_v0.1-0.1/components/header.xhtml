@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:form>
+        <h1 id="main-header-logo">
+            <h:link value="MyLibrary" outcome="/index.xhtml"/>
+        </h1>
+
+        <div id="main-header-menu">
+
+            <p:commandButton id="dynaButton" value="#{userProfileManagedBean.usersname}" type="button" icon="pi pi-bars" rendered="#{not empty authenticationBean.username}"/>
+            <p:menu overlay="true" trigger="dynaButton" my="left top" at="left bottom">
+
+                <p:menuitem value="#{msgs.Profile}" icon="pi pi-user" action="/member/profile?faces-redirect=true"/>                    
+                <p:menuitem value="#{msgs.ViewBooks}" icon="pi pi-list" action="/books?faces-redirect=true"
+                            rendered="#{!authenticationBean.hasLibrarianPrivileges()}"/>
+                <p:submenu label="#{msgs.Loans}" rendered="#{authenticationBean.hasLibrarianPrivileges()}">
+                    <p:menuitem value="#{msgs.NewLoan}" icon="pi pi-ticket" action="/librarian/createLoan?faces-redirect=true"/>
+                    <p:menuitem value="#{msgs.ViewLoans}" icon="pi pi-list"  action="/librarian/loans?faces-redirect=true"/>
+                </p:submenu>
+                <p:submenu label="#{msgs.Users}" rendered="#{authenticationBean.hasLibrarianPrivileges()}">
+                    <p:menuitem value="#{msgs.NewUser}" icon="pi pi-user" action="/librarian/createUser?faces-redirect=true"/>
+                    <p:menuitem value="#{msgs.ViewUsers}" icon="pi pi-list" action="/librarian/users?faces-redirect=true"/>
+                </p:submenu>
+                <p:submenu label="#{msgs.Books}" rendered="#{authenticationBean.hasLibrarianPrivileges()}">
+                    <p:menuitem value="#{msgs.NewBook}" icon="pi pi-book" action="/librarian/createBook?faces-redirect=true"/>
+                    <p:menuitem value="#{msgs.ViewBooks}" icon="pi pi-list" action="/books?faces-redirect=true"/>
+                </p:submenu>
+                <p:submenu label="#{msgs.Settings}" rendered="#{authenticationBean.hasAdminPrivileges()}">
+                    <p:menuitem value="#{msgs.Configuration}" icon="pi pi-cog" action="/admin/libConfiguration.xhtml?faces-redirect=true"/>                    
+                </p:submenu>
+                <p:divider/>
+                <p:menuitem value="#{msgs.LogOut}" action="#{authenticationBean.logout()}"  icon="pi pi-sign-out"/>
+            </p:menu>
+
+            <p:button value="#{msgs.LogIn}" outcome="/login?faces-redirect=true" icon="pi pi-sign-in" rendered="#{empty authenticationBean.username}"/>
+
+        </div>
+    </h:form>
+</html>
+

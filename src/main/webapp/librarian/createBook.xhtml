@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <ui:composition template="/templates/mainLayout.xhtml">
+        <ui:define name="title">
+            #{msgs.CreateBookTitle}
+        </ui:define>
+
+        <ui:define name="content">
+            <h2>#{msgs.CreateBook}</h2>
+            <h:form enctype="multipart/form-data">
+                <p:panelGrid columns="2" class="panelGridCenter">
+
+                    <p:outputLabel value="#{msgs.ImageLabel}" class="form-label"/>
+                    <p:fileUpload id="book-image" value="#{bookManagedBean.file}" label="#{msgs.Choose}" mode="simple" skinSimple="true"/>
+
+                    <p:outputLabel for="book-title" value="#{msgs.TitleLabel}" class="form-label"/>
+                    <p:inputText id="book-title" value="#{bookManagedBean.book.title}" placeholder="#{msgs.BookTitle}"
+                                 required="true"
+                                 requiredMessage="#{msgs.BookTitleRequired}"/>
+
+                    <p:outputLabel for="book-copies" value="#{msgs.CopiesLabel}" class="form-label"/>
+                    <p:inputNumber id="book-copies" value="#{bookManagedBean.book.copies}" placeholder="#{msgs.BookCopies}"
+                                   maxValue="999" decimalPlaces="0"
+                                   required="true"
+                                   requiredMessage="#{msgs.BookCopiesRequired}"/>
+
+                    <p:outputLabel for="book-authors" value="#{msgs.AuthorsLabel}" class="form-label"/>
+                    <p:autoComplete id="book-authors" multiple="true" value="#{bookManagedBean.authorNames}" completeMethod="#{bookManagedBean.completeText}"/>
+
+                    <span/>
+                    <p:commandButton value="#{msgs.CreateBook}" action="#{bookManagedBean.createBook()}" ajax="false"/>
+
+                </p:panelGrid>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
+

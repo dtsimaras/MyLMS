@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/templates/mainLayout.xhtml">
+        <ui:define name="title">
+            #{msgs.LoginTitle}
+        </ui:define>
+
+        <ui:define name="metadata">
+            <h:panelGroup rendered="${not empty authenticationBean.username}">
+                <meta http-equiv="refresh" content="0; URL=/myLibrary_v0.1/index.xhtml" />
+            </h:panelGroup>
+        </ui:define>
+
+        <ui:define name="content">
+            <h2>#{msgs.LogIn}</h2>
+                    <h:form rendered="${empty authenticationBean.username}" >
+                        <div class="form-component">
+                            <p:outputLabel for="username" value="#{msgs.UsernameLabel}" class="form-label"/>
+                            <p:inputText id="username" value="#{authenticationBean.username}" placeholder="#{msgs.Username}"
+                                         required="true"
+                                         requiredMessage="#{msgs.UsernameRequired}"/>
+                        </div>
+                        <div class="form-component">
+                            <p:outputLabel for="password" value="#{msgs.PasswordLabel}" class="form-label"/>
+                            <p:inputText id="password" value="#{authenticationBean.password}" placeholder="#{msgs.Password}"
+                                         required="true" type="password"
+                                         requiredMessage="#{msgs.PasswordRequired}"/>
+                        </div>
+                        <p:commandButton id="dynaButton" type="Submit" value="#{msgs.SignIn}" action="#{authenticationBean.login()}" ajax="false"/>
+                    </h:form>
+        </ui:define>
+
+    </ui:composition>
+</html>
+

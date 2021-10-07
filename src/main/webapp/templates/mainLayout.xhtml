@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html    xmlns="http://www.w3.org/1999/xhtml"
+         xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+         xmlns:h="http://xmlns.jcp.org/jsf/html"
+         xmlns:p="http://primefaces.org/ui"
+         xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <f:view locale="#{localeManagedBean.locale}">
+        <h:head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <ui:insert name="metadata"/>
+            <title><ui:insert name="title">myLibrary</ui:insert></title>
+            <h:outputStylesheet library="css" name="style.css"/>
+        </h:head>
+
+        <h:body>
+            <p:growl id="messages" showDetail="true"/>
+            <ui:include src="/components/sessionTimeout.xhtml"/>
+
+            <div id="main-header">
+                <ui:include src="/components/header.xhtml"/>
+            </div>
+
+            <div class="wrap">
+                <div id="content" class="box">
+                    <ui:insert name="content"/>
+                </div>
+            </div>
+
+            <div id="footer" style="margin-top: 0">
+                <ui:include src="/components/footer.xhtml"/>
+            </div>
+        </h:body>
+    </f:view>
+</html>
+
+

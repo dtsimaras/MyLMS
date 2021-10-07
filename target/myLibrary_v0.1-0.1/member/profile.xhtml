@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="/templates/mainLayout.xhtml">
+
+        <ui:define name="title">
+            myLibrary - #{userProfileManagedBean.usersname} #{msgs.Profile}
+        </ui:define>
+        
+        <ui:define name="content">
+            <h1 style="text-align: left">#{msgs.Welcome} #{userProfileManagedBean.usersname}!</h1>
+            <p:dataTable var="openLoan" value="#{userProfileManagedBean.openLoans}" paginator="true" rows="5"
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         paginatorPosition="bottom"
+                         rowsPerPageTemplate="5,10"
+                         id="open-book-table"
+                         stripedRows="true"
+                         reflow="true"
+                         rowKey="#{openLoan.id}">
+
+                <f:facet name="header">
+                    <div>
+                        <h2>#{msgs.BooksBorrowed}</h2>
+                    </div>
+                </f:facet>
+
+                <p:column field="id" headerText="#{msgs.LoanID}"/>
+
+                <p:column field="book.id" headerText="#{msgs.BookID}"/>
+
+                <p:column field="book.title" headerText="#{msgs.Title}"/>
+
+                <p:column field="book.bookAuthorListToString" headerText="#{msgs.Authors}"/>
+
+                <p:column field="dateCheckout" headerText="#{msgs.CheckoutDate}" filterable="false"/>
+
+                <p:column field="dateDue" headerText="#{msgs.DuetoDate}">
+                    <p:outputLabel value="#{openLoan.dateDue}" >
+                        <f:convertDateTime pattern="EEE MMM d yyyy" timeZone="GMT+3" />
+                    </p:outputLabel>
+                </p:column>
+
+            </p:dataTable>
+
+            <p:dataTable var="closedLoan" value="#{userProfileManagedBean.closedLoans}" paginator="true" rows="10"
+                         paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         paginatorPosition="bottom"
+                         rowsPerPageTemplate="10,20,50"
+                         id="closed-book-table"
+                         stripedRows="true"
+                         reflow="true"
+                         rowKey="#{closedLoan.id}">
+
+                <f:facet name="header">
+                    <div>
+                        <h2>#{msgs.History}</h2>
+                    </div>
+                </f:facet>
+
+                <p:column field="id" headerText="#{msgs.LoanID}" sortBy="#{closedLoan.id}" filterBy="#{closedLoan.id}"/>
+
+                <p:column field="book.id" headerText="#{msgs.BookID}" sortBy="#{closedLoan.book.id}" filterBy="#{closedLoan.book.id}"/>
+
+                <p:column field="book.title" headerText="#{msgs.Title}" sortBy="#{closedLoan.book.title}" filterBy="#{closedLoan.book.title}"/>
+
+                <p:column field="book.bookAuthorListToString" headerText="#{msgs.Authors}" sortBy="#{closedLoan.book.bookAuthorListToString}"
+                          filterBy="#{closedLoan.book.bookAuthorListToString}"/>
+
+                <p:column field="dateCheckout" headerText="#{msgs.CheckoutDate}" sortBy="#{closedLoan.dateCheckout}"/>
+
+                <p:column field="dateCheckin" headerText="#{msgs.CheckinDate}" sortBy="#{closedLoan.dateCheckin}"/>
+
+                <p:column field="dateDue" headerText="#{msgs.DuetoDate}" sortBy="#{closedLoan.id}">
+                    <p:outputLabel value="#{closedLoan.dateDue}" >
+                        <f:convertDateTime pattern="EEE MMM d yyyy" timeZone="GMT+3" />
+                    </p:outputLabel>
+                </p:column>
+
+            </p:dataTable>
+
+        </ui:define>
+    </ui:composition>
+</html>
+

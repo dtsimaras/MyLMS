@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/templates/mainLayout.xhtml">
+        <ui:define name="title">
+            #{msgs.CreateUserTitle}
+        </ui:define>
+
+        <ui:define name="content">
+            <h2>#{msgs.CreateUser}</h2>
+            <h:form>                
+                <p:panelGrid columns="2" class="panelGridCenter">
+
+                    <p:outputLabel for="user-name" value="#{msgs.NameLabel}" class="form-label"/>
+                    <p:inputText id="user-name" value="#{userManagedBean.user.name}" placeholder="#{msgs.Name}"
+                                 required="true"
+                                 requiredMessage="#{msgs.NameRequired}"/>
+
+                    <p:outputLabel for="user-lastname" value="#{msgs.LastnameLabel}" class="form-label"/>
+                    <p:inputText id="user-lastname" value="#{userManagedBean.user.lastname}" placeholder="#{msgs.Lastname}"
+                                 required="true"
+                                 requiredMessage="#{msgs.LastnameRequired}"/>
+
+                    <p:outputLabel for="user-email" value="#{msgs.EmailLabel}" class="form-label"/>
+                    <p:inputText id="user-email" value="#{userManagedBean.user.email}" placeholder="#{msgs.Email}"
+                                 required="true"
+                                 requiredMessage="#{msgs.EmailRequired}"/>
+                    
+                    <p:outputLabel for="user-password" value="#{msgs.PasswordLabel}" class="form-label"/>
+                    <p:password  id="user-password" value="#{userManagedBean.user.password}" placeholder="#{msgs.Password}"
+                                 required="true" autocomplete="new-password"
+                                 requiredMessage="#{msgs.PasswordRequired}"/>
+                    
+                    <p:outputLabel for="user-password2" value="#{msgs.RepeatPasswordLabel}" class="form-label"/>
+                    <p:password  id="user-password2" value="#{userManagedBean.verifyPassword}" placeholder="#{msgs.Password}"
+                                 required="true"
+                                 requiredMessage="#{msgs.PasswordRequired}"/>
+
+                    <span/>
+                    <p:commandButton value="#{msgs.CreateUser}" action="#{userManagedBean.createUser()}" ajax="false"/>
+
+                </p:panelGrid>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
+

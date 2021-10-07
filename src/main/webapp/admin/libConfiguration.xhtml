@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="/templates/mainLayout.xhtml">
+
+        <ui:define name="title">
+            myLibrary - Control Panel
+        </ui:define>
+
+        <ui:define name="content">
+            <h2> #{msgs.LibraryConfigurationTitle} </h2>
+
+            <h:form >
+                <p:panelGrid columns="2" style="display: inline-block;">
+                    <p:outputLabel for="loan-days" value="#{msgs.LibraryConfigurationLoanDays}" class="form-label"/>
+                    <p:inputNumber id="loan-days" value="#{configManagedBean.libConfig.loandays}" placeholder="Max Loan Days"
+                                   maxValue="99" decimalPlaces="0"
+                                   required="true"
+                                   requiredMessage="#{msgs.LibraryConfigurationLoanDaysRequired}"/>
+
+                    <p:outputLabel for="loan-quantity" value="#{msgs.LibraryConfigurationLoanQuantity}" class="form-label"/>
+                    <p:inputNumber id="loan-quantity" value="#{configManagedBean.libConfig.loanquantity}" placeholder="Max Loan Books"
+                                   maxValue="99" decimalPlaces="0"
+                                   required="true"
+                                   requiredMessage="#{msgs.LibraryConfigurationLoanQuantityRequired}"/>
+
+                    <p:outputLabel for="image--parent-path" value="#{msgs.LibraryConfigurationImagePath}" class="form-label"/>
+                    <p:inputText id="image--parent-path" value="#{configManagedBean.libConfig.imageparentpath}" placeholder="Images Directory"
+                                 required="true"
+                                 requiredMessage="#{msgs.LibraryConfigurationImagePathRequired}"/>
+                    <span/>
+                    <p:commandButton type="Submit" value="#{msgs.Save}" action="#{configManagedBean.updateLibConfig()}" ajax="false"/>
+                </p:panelGrid>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
+

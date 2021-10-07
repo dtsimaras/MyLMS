@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <f:view locale="#{localeManagedBean.locale}">
+        <h:head>
+            <title>#{msgs.Error403Title}</title>
+            <h:outputStylesheet library="css" name="style.css"/>
+            <meta http-equiv="refresh" content="5; URL=/myLibrary_v0.1/index.xhtml" />
+        </h:head>
+        <h:body>
+
+            <div id="main-header">
+                <ui:include src="/components/header.xhtml"/>
+            </div>
+
+            <div class="box" style="text-align: center">
+                <div class="wrap-center-text">
+                    <h1>#{msgs.Error403Header}</h1>
+                    <p>#{msgs.Error403Paragraph1}</p>
+                    <p>#{msgs.Error403Paragraph2}</p>
+                </div>
+            </div>
+
+            <div id="footer">
+                <ui:include src="/components/footer.xhtml"/>
+            </div>
+        </h:body>
+    </f:view>
+</html>
+
